@@ -1,4 +1,4 @@
-module github.com/ChimeraCoder/gojson
+module github.com/cassioconti/gojson
 
 go 1.16
 
