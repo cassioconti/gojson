@@ -1,5 +1,9 @@
 package gojson
 
+import (
+	"time"
+)
+
 type User struct {
 	OneNumberKey      int64       `json:"1number_key"`
 	AvatarURL         string      `json:"avatar_url"`

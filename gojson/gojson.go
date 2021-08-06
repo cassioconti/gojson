@@ -8,6 +8,10 @@
 // Output:
 // 	package main
 //
+//  import (
+//    "time"
+//  )
+//
 // 	type User struct {
 // 		AvatarURL         string      `json:"avatar_url"`
 // 		Bio               interface{} `json:"bio"`

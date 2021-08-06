@@ -8,6 +8,10 @@
 // Output:
 // 	package main
 //
+//  import (
+//    "time"
+//  )
+//
 // 	type Repository struct {
 //     	ArchiveURL       string      `json:"archive_url"`
 //     	AssigneesURL     string      `json:"assignees_url"`
@@ -218,8 +222,9 @@ func Generate(input io.Reader, parser Parser, structName, pkgName string, tags [
 	case map[string]interface{}:
 		result = iresult
 	case []interface{}:
-		src := fmt.Sprintf("package %s\n\ntype %s %s\n",
+		src := fmt.Sprintf("package %s\n\n%s\ntype %s %s\n",
 			pkgName,
+			generateImports(map[string]interface{}{"key": iresult}, structName, tags, subStructMap, convertFloats),
 			structName,
 			typeForValue(iresult, structName, tags, subStructMap, convertFloats))
 		formatted, err := format.Source([]byte(src))
@@ -231,8 +236,9 @@ func Generate(input io.Reader, parser Parser, structName, pkgName string, tags [
 		return nil, fmt.Errorf("unexpected type: %T", iresult)
 	}
 
-	src := fmt.Sprintf("package %s\ntype %s %s}",
+	src := fmt.Sprintf("package %s\n%stype %s %s}",
 		pkgName,
+		generateImports(result, structName, tags, subStructMap, convertFloats),
 		structName,
 		generateTypes(result, structName, tags, 0, subStructMap, convertFloats))
 
@@ -474,7 +480,7 @@ func lintFieldName(name string) string {
 func typeForValue(value interface{}, structName string, tags []string, subStructMap map[string]string, convertFloats bool) string {
 	//Check if this is an array
 	if objects, ok := value.([]interface{}); ok {
-		types := make(map[reflect.Type]bool, 0)
+		types := make(map[reflect.Type]bool)
 		for _, o := range objects {
 			types[reflect.TypeOf(o)] = true
 		}
@@ -587,4 +593,25 @@ func mergeObjects(o1, o2 interface{}) interface{} {
 		}
 		return i
 	}
+}
+
+func generateImports(obj map[string]interface{}, structName string, tags []string, subStructMap map[string]string, convertFloats bool) string {
+	uniqueImports := map[string]struct{}{}
+	for _, value := range obj {
+		valueType := typeForValue(value, structName, tags, subStructMap, convertFloats)
+		if strings.Contains(valueType, "time.Time") {
+			uniqueImports["time"] = struct{}{}
+		}
+	}
+
+	imports := []string{}
+	for key := range uniqueImports {
+		imports = append(imports, fmt.Sprintf("\"%s\"", key))
+	}
+
+	if len(imports) > 0 {
+		return fmt.Sprintf("import (\n%s\n)\n", strings.Join(imports, "\n"))
+	}
+
+	return ""
 }

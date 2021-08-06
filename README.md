@@ -12,6 +12,10 @@ $ curl -s https://api.github.com/repos/chimeracoder/gojson | gojson -name=Reposi
 
 package main
 
+import (
+	"time"
+)
+
 type Repository struct {
 	ArchiveURL       string      `json:"archive_url"`
 	AssigneesURL     string      `json:"assignees_url"`

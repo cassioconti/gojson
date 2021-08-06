@@ -167,7 +167,7 @@ func TestTime(t *testing.T) {
 		expected string
 	}
 
-	expectedTime := "package foopkg\n\ntype FooTime struct {\n\tCreatedTime time.Time `json:\"createdTime\"`\n}\n"
+	expectedTime := "package foopkg\n\nimport (\n\t\"time\"\n)\n\ntype FooTime struct {\n\tCreatedTime time.Time `json:\"createdTime\"`\n}\n"
 	expectedString := "package foopkg\n\ntype FooTime struct {\n\tCreatedTime string `json:\"createdTime\"`\n}\n"
 
 	testCases := []testCase{

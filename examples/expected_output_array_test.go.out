@@ -5,6 +5,10 @@ package gojson
 // for []interface{}
 // https://github.com/ChimeraCoder/gojson/issues/17
 
+import (
+	"time"
+)
+
 type Users []struct {
 	AvatarURL         string      `json:"avatar_url"`
 	Bio               interface{} `json:"bio"`
