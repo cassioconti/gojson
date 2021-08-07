@@ -8,7 +8,7 @@ Example
 ----------
 
 ```sh
-$ curl -s https://api.github.com/repos/chimeracoder/gojson | gojson -name=Repository
+$ curl -s https://api.github.com/repos/cassioconti/gojson | gojson -name=Repository
 
 package main
 
